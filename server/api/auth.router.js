@@ -12,4 +12,12 @@ router.post("/me", function(req,res,next){
 		}).then(null, next)
 })
 
+router.get("/google", function(req,res,next){
+	res.send('baghead')
+});
+
+router.get("/google/callback", function(req,res,next){
+	res.send("boghead")
+})
+
 module.exports = router;

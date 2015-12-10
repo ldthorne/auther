@@ -4,6 +4,7 @@ var app = require('express')();
 var path = require('path');
 var chalk = require('chalk');
 var session = require('express-session');
+var passport = require('passport');
 
 app.use(require('./logging.middleware'));
 
@@ -19,6 +20,17 @@ app.use(function (req, res, next) {
   console.log(chalk.red("req session", req.session.userId));
   next();
 });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/api/auth/google', passport.authenticate('google', { scope : 'email' }));
+
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', {
+    successRedirect : '/home',
+    failureRedirect : '/'
+  }));
 
 app.use('/api', require('../api/api.router'));
 
