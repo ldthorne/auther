@@ -12,12 +12,14 @@
   "dependencies": {
     "bluebird": "^2.10.2",
     "express": "^4.13.3",
+    "express-session": "^1.12.1",
     "lodash": "^3.10.1",
     "mongoose": "^4.1.10",
     "morgan": "^1.6.1",
     "shortid": "^2.2.2"
   },
   "devDependencies": {
+    "chalk": "^1.1.1",
     "chance": "^0.8.0",
     "nodemon": "^1.7.1"
   }

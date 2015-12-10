@@ -26,6 +26,7 @@ router.param('id', function(req, res, next, id) {
 router.get('/', function(req, res, next) {
     User.find({}).exec()
         .then(function(users) {
+        		console.log("This is the req session userId",req.session.userId);
             res.json(users);
         })
         .then(null, next);
@@ -33,26 +34,38 @@ router.get('/', function(req, res, next) {
 
 router.post('/signup', function(req, res, next) {
     findOrCreate(User, req.body)
-        .then(function(user)
-        {
-        	console.log("user created", user)
-            res.status(201).json(user);
+        .then(function(user){
+        	console.log("user created", user);
+        	if (!req.session.userId) req.session.userId = user._id;
+          res.status(201).json(user);
         }).then(null, function(user){
         	console.log("user was not successfully", user)
         	next();
         })
 });
+
 router.post('/login', function(req, res, next) {
     User.findOne(req.body)
         .then(function(user) {
-            console.log(user)
+            // console.log(user);
             if(!user){
                 res.status(401).json(user);
-            }else{
-                console.log("user found")
+            } else {
+                if (!req.session.userId) req.session.userId = user._id;
+                console.log("This is the req session userId",req.session.userId);
                 res.status(201).json(user);
             }
         }).then(null, next);
+});
+
+router.get('/logout', function(req, res, next) {
+    if (req.session.userId) { 
+    	req.session.destroy();
+    	console.log("Made it here !!!! !!!! !!!!")
+    	res.status(201).send();
+    } else {
+    	res.status(401).send("You're not logged in! How are we gonna log you out?")
+    }
 });
 
 router.get('/:id', function(req, res, next) {

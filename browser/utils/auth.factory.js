@@ -10,10 +10,10 @@ app.factory("AuthFactory", function($http, $state){
 				console.log(user);
 				return user.data;
 			}).then(function(){
-				$state.go("home")
+				$state.go("home");
 			})
 			.catch(function(error){
-				console.error(error).bind(console)
+				console.error("This account cannot be added", error);
 			});
 		},
 		login: function(email, password){
@@ -21,15 +21,22 @@ app.factory("AuthFactory", function($http, $state){
 				email:email,
 				password:password
 			}).then(function(user){
-				console.log("signed in",user);
+				// console.log("signed in", user);
 				return user.data;
 			}).then(function(data){
-				console.log(data)
-				$state.go("home")
-
+				// console.log(data);
+				$state.go("home");
 			}).catch(function(error){
 				console.error("This account does not exist in our database",error);
 			});
+		}, 
+		logout: function() {
+			return $http.get("/api/users/logout")
+				.then(function(){
+					$state.go("home");
+				}).catch(function(error){
+					console.error("Couldn't log out", error);
+				});
 		}
 
 	}
