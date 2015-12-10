@@ -1,5 +1,13 @@
 app.factory("AuthFactory", function($http, $state){
-	
+	var currentUser;
+	$http.post("/api/auth/me")
+		.then(function(user){
+			console.log(user)
+			currentUser = user.data;
+		})
+		.catch(function(err){
+			console.error(err);
+		})
 	return {
 		signUp: function(email, password){
 			console.log("we're getting to the factory!")
@@ -9,7 +17,9 @@ app.factory("AuthFactory", function($http, $state){
 			}).then(function(user){
 				console.log(user);
 				return user.data;
-			}).then(function(){
+			}).then(function(data){
+				currentUser = data;
+
 				$state.go("home");
 			})
 			.catch(function(error){
@@ -24,7 +34,8 @@ app.factory("AuthFactory", function($http, $state){
 				// console.log("signed in", user);
 				return user.data;
 			}).then(function(data){
-				// console.log(data);
+				currentUser = data;
+				console.log(data);
 				$state.go("home");
 			}).catch(function(error){
 				console.error("This account does not exist in our database",error);
@@ -33,10 +44,14 @@ app.factory("AuthFactory", function($http, $state){
 		logout: function() {
 			return $http.get("/api/users/logout")
 				.then(function(){
+					currentUser = null;
 					$state.go("home");
 				}).catch(function(error){
 					console.error("Couldn't log out", error);
 				});
+		},
+		getCurrentUser: function(){
+			return currentUser
 		}
 
 	}

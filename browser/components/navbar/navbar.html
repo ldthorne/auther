@@ -15,9 +15,9 @@
 				<li ng-class="{active: pathStartsWithStatePath('stories')}"><a ui-sref="stories">stories</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li ui-sref-active="active"><a ui-sref="signup">signup</a></li>
-				<li ui-sref-active="active"><a ui-sref="login">login</a></li>
-				<li><button ng-click="logout()" ui-sref="logout" class="navbar-btn btn btn-default">logout</button></li>
+				<li ui-sref-active="active" ng-show="!getCurrentUser()"><a ui-sref="signup">signup</a></li>
+				<li ui-sref-active="active" ng-show="!getCurrentUser()"><a ui-sref="login">login</a></li>
+				<li><button ng-click="logout()" ui-sref="logout" class="navbar-btn btn btn-default" ng-show="getCurrentUser()">logout</button></li>
 			</ul>
 		</div>
 	</div>
