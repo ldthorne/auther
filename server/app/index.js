@@ -5,6 +5,7 @@ var path = require('path');
 var chalk = require('chalk');
 var session = require('express-session');
 var passport = require('passport');
+var passportGoogleOauth = require('passport-google-oauth');
 
 app.use(require('./logging.middleware'));
 
@@ -23,6 +24,21 @@ app.use(function (req, res, next) {
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(
+    new GoogleStrategy({
+        clientID: '1058055038244-l220mdesg2adkgepq2q31c8j7bav60v5.apps.googleusercontent.com',
+        clientSecret: 'u-dFo_A1UlT3QkyKMRzYf5xv',
+        callbackURL: '/'
+    },
+    // google will send back the token and profile
+    function (token, refreshToken, profile, done) {
+        // the callback will pass back user profile information and each service (Facebook, Twitter, and Google) will pass it back a different way. Passport standardizes the information that comes back in its profile object.
+        console.log(chalk.blue('---', 'in verification callback', profile, '---'));
+        done();
+    })
+);
 
 app.get('/api/auth/google', passport.authenticate('google', { scope : 'email' }));
 
